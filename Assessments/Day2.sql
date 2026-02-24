@@ -52,9 +52,10 @@ GROUP BY d.DepName;
 SELECT d.DepName,
     COUNT(e.Empid) AS Employee_Count,
     SUM(e.Salary) AS Total_Salary,
-    AVG(e.Salary) AS Average_Salary
+    AVG(e.Salary) AS Average_Salary 
 FROM Employees e JOIN Department d ON e.Depid = d.Depid
 GROUP BY d.DepName;
+
 
 
 -- FULL OUTER JOIN
@@ -69,9 +70,10 @@ FROM Employees e JOIN Department d ON e.Depid = d.Depid
 GROUP BY d.DepName;
 
 -- HIGHEST SALARY
-SELECT e.EmpName
+SELECT e.EmpName , d.DepName
 FROM Employees e JOIN Department d ON e.Depid = d.Depid
 WHERE e.Salary = (SELECT MAX(Salary) FROM Employees);
+
 
 
 -- LOWEST SALARY
