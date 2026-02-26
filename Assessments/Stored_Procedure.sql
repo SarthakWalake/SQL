@@ -2,7 +2,7 @@ USE Spektra
 
 -- STORED PROCEDURE
 
-CREATE PROCEDURE SpEmpProcedure
+CREATE PROCEDURE sp_EmpProcedure
 @Salary INT
 AS
 BEGIN
@@ -10,4 +10,45 @@ UPDATE Employees SET Salary = @Salary
 WHERE Salary > @Salary
 END
 
-EXECUTE SpEmpProcedure 10000
+-- CALLING STORED PROCEDURE 
+EXECUTE sp_EmpProcedure 10000
+
+
+-- CREATING STORED PROCEDURE
+CREATE PROCEDURE sp_MidPoint @LowerNumber INT , @HigherNumber INT
+AS
+  BEGIN
+    DECLARE @Mid INT
+    IF @LowerNumber > @HigherNumber
+      RAISERROR('YOU HAVE ENTERED ',16,1)
+       SET @Mid = ((@HigherNumber - @LowerNumber) / 2) + @LowerNumber
+       SELECT @Mid
+   END
+
+
+-- CALLING STORED PROCEDURE
+EXECUTE sp_MidPoint 20 , 30
+
+
+-- DROPING STORED PROCEDURE
+DROP PROCEDURE sp_MidPoint
+
+
+
+-- CREATING STORED PROCEDURE WITH OUTPUT PARAMETER
+CREATE PROCEDURE sp_MathTutor
+ @m1 SMALLINT,
+ @m2 SMALLINT,
+ @result INT OUTPUT
+AS
+  SET @result = @m1 * @m2
+GO
+
+--EXECUTING STORED PROCEDURE 
+DECLARE @answer SMALLINT
+EXECUTE sp_MathTutor 5 , 6 , @answer OUTPUT
+SELECT CONCAT('THE RESULT IS  ',@answer)
+
+
+
+
