@@ -69,7 +69,7 @@ AS
    INSERT INTO Employees(LastName , FirstName)
    VALUES (@LastName , @FirstName)
    RETURN SCOPE_IDENTITY()
-   END
+  END
 
    
    
