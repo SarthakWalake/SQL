@@ -124,3 +124,9 @@ UNION
 SELECT sid
 FROM Reserves
 WHERE bid = 104;
+
+--Find the names of sailors who have reserved boat 103.
+SELECT DISTINCT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+WHERE r.bid = 103;
