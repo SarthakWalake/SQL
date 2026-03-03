@@ -85,3 +85,56 @@ END;
 
 --Droping Trigger
 DROP TRIGGER trg_LogBalanceChange;
+
+
+-- Creating Stored Procedure
+CREATE PROCEDURE sp_TransferAmount
+    @FromAccount INT,
+    @ToAccount INT,
+    @Amount DECIMAL(10,2)
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        DECLARE @balance DECIMAL(10,2);
+
+        -- Get balance of sender
+        SELECT @balance = balance
+        FROM Accounts
+        WHERE account_id = @FromAccount;
+
+        -- Check if account exists
+        IF @balance IS NULL
+        BEGIN
+            PRINT 'Sender account not found';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        -- Check sufficient balance
+        IF @balance < @Amount
+        BEGIN
+            PRINT 'Insufficient balance';
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+        -- Deduct from sender
+        UPDATE Accounts
+        SET balance = balance - @Amount
+        WHERE account_id = @FromAccount;
+
+        -- Add to receiver
+        UPDATE Accounts
+        SET balance = balance + @Amount
+        WHERE account_id = @ToAccount;
+
+        COMMIT TRANSACTION;
+        PRINT 'Transaction Successful';
+
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        PRINT 'Transaction Failed';
+    END CATCH
+END;
+
+EXECUTE sp_TransferAmount 1 , 2 , 1000
