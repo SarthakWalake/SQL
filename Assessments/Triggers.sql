@@ -72,3 +72,29 @@ GO
 
 --UPDATING THE SALARY
 UPDATE Employee_Test SET Emp_Sal = 1500 WHERE Emp_ID = 6
+
+
+-- CREATING TRIGGER FOR AFTER DELETE 
+CREATE TRIGGER trgAfterDelete ON Employee_Test
+AFTER DELETE
+AS
+	DECLARE @empid INT;
+	DECLARE @empname VARCHAR(100);
+	DECLARE @empsal DECIMAL(10,2);
+	DECLARE @audit_action VARCHAR(100);
+
+	SELECT @empid = d.Emp_ID FROM DELETED d;
+	SELECT @empname = d.Emp_name FROM DELETED d;
+	SELECT @empsal = d.Emp_Sal FROM DELETED d;
+	SET @audit_action = 'DELETED -- AFTER DELETE TRIGGER';
+
+	INSERT INTO Employee_Test_Audit
+	(Emp_ID , Emp_name , Emp_Sal , Audit_Action , Audit_Timestamp)
+					VALUES
+	(@empid , @empname , @empsal , @audit_action , GETDATE());
+
+	PRINT ' AFTER DELETE TRIGGER FIRED.'
+GO
+
+--DELETE EMPLOYEE FROM EMPLOYEE_TEST TABLE 
+DELETE FROM Employee_Test WHERE Emp_ID = 6
