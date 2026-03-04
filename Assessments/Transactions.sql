@@ -137,4 +137,5 @@ BEGIN
     END CATCH
 END;
 
+--Executing Stored Procedure
 EXECUTE sp_TransferAmount 1 , 2 , 1000
